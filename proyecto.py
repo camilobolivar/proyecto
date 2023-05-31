@@ -5,13 +5,19 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 
-# Configuration parameters for the whole setup
+# Configuration parameters for the whole setup 
+# 
+
 seed = 42
-gamma = 0.99  # Factor de descuento para recompensas pasadas
+gamma = 0.99   
+'''Factor de descuento para recompensas pasadas'''
 max_steps_per_episode = 10000
-env = gym.make("CartPole-v0")  # Crea el entorno CartPole-v0
+env = gym.make("CartPole-v0")  
+'''Crea el entorno CartPole-v0'''
+
 env.seed(seed)
-eps = np.finfo(np.float32).eps.item()  # El número más pequeño tal que 1.0 + eps != 1.0
+eps = np.finfo(np.float32).eps.item()  
+'''El número más pequeño tal que 1.0 + eps != 1.0'''
 
 
 # En esta sección se importan las bibliotecas necesarias
@@ -55,7 +61,8 @@ rewards_history = []
 running_reward = 0
 episode_count = 0
 
-while True:  # Ejecuta hasta que se resuelva
+while True:
+    '''Ejecuta hasta que se resuelva''' 
     state = env.reset()
     episode_reward = 0
     with tf.GradientTape() as tape:
