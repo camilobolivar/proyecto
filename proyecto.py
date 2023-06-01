@@ -22,14 +22,6 @@ eps = np.finfo(np.float32).eps.item()
 '''Define eps como el número más pequeño de punto flotante representable para el tipo np.float32. Este valor se utilizará más adelante para evitar divisiones por cero en cálculos numéricos.'''
 
 
-# En esta sección se importan las bibliotecas necesarias
-# y se establecen los parámetros de configuración, como 
-# la semilla para reproducibilidad, el factor de descuento 
-# gamma y el número máximo de pasos por episodio. También 
-# se crea el entorno CartPole-v0 y se establece una semilla para el entorno.
-
-
-
 #Implementar red de Críticos de Actores
 
 num_inputs = 4
@@ -52,15 +44,6 @@ model = keras.Model(inputs=inputs, outputs=[action, critic])
 '''Se crea el modelo de la red neuronal utilizando el objeto Model de Keras. Se especifican las capas de entrada y salida del modelo. En este caso, las salidas son la capa de acción y la capa del crítico.'''
 
 
-#En esta sección se implementa la red Actor-Critic. 
-# La red consta de tres capas: una capa de entrada con 
-# forma (num_inputs,), una capa oculta completamente 
-# conectada con activación ReLU y una capa de salida para 
-# las acciones con activación softmax, y una capa de salida 
-# para el crítico que estima las recompensas futuras. 
-# El modelo se crea utilizando la API funcional de Keras.
-
-
 # Train
 
 optimizer = keras.optimizers.Adam(learning_rate=0.01)
@@ -78,7 +61,7 @@ running_reward = 0
 episode_count = 0
 '''Se inicializa el contador de episodios en 0. '''
 
-while True:  # que problema hay que resolver??
+while True:
     '''Se inicia un bucle que se ejecutará hasta que el problema se considere resuelto.''' 
     state = env.reset() 
     '''Se restablece el estado del entorno del juego CartPole al comienzo de cada episodio.'''
@@ -96,7 +79,7 @@ while True:  # que problema hay que resolver??
 
             # Predecir probabilidades de acción y valores estimados de recompensa futura
             # a partir del estado del entorno
-            action_probs, critic_value = model(state) # que son los valoes criticos??
+            action_probs, critic_value = model(state) 
             ''' Se pasa el estado a través del modelo para obtener las probabilidades de acción y el valor del crítico. '''
             critic_value_history.append(critic_value[0, 0])
             '''Se agrega el valor del crítico al historial de valores del crítico.'''
@@ -118,23 +101,6 @@ while True:  # que problema hay que resolver??
             if done:
                 break
 
-
-
-
-# En esta sección comienza el bucle principal de entrenamiento. 
-# Se reinicia el estado del entorno y se inicializan las variables
-# para el historial de probabilidades de acción, valores del crítico 
-# y recompensas. Luego, se ejecutan los pasos del episodio dentro de un 
-# contexto GradientTape de TensorFlow para realizar el cálculo automático de gradientes.
-
-# Dentro del bucle, se predecen las probabilidades de acción y el valor
-# del crítico para el estado actual del entorno. Se registran estos valores 
-# en los historiales correspondientes. Luego, se muestrea una acción de 
-# acuerdo con las probabilidades de acción predichas y se aplica la acción 
-# al entorno. Se registran la recompensa y la recompensa acumulada del episodio.
-
-# El bucle continúa hasta que se alcanza el número máximo de pasos por episodio
-# o hasta que el entorno reporta que el episodio ha terminado (done=True).
 
 
         #Actualice la recompensa en ejecución para verificar la condición para resolver
@@ -204,23 +170,3 @@ while True:  # que problema hay que resolver??
         print("Solved at episode {}!".format(episode_count))
         break
 
-
-
-# Después de ejecutar los pasos del episodio, se actualiza la recompensa 
-# acumulada promediada en running_reward. A continuación, se calculan los 
-# valores esperados de las recompensas utilizando el factor de descuento gamma. 
-# Estos valores se utilizan como etiquetas para el crítico. Luego, los 
-# historiales se normalizan y se calculan las pérdidas del actor y el crítico.
-
-# Después del cálculo de las pérdidas, se realiza la retropropagación y la 
-# actualización de los parámetros del modelo utilizando el optimizador Adam. 
-# Luego, se borran los historiales de probabilidades de acción, valores del 
-# crítico y recompensas para el siguiente episodio.
-
-# Se registran los detalles del episodio, como la recompensa acumulada promediada, 
-# y se verifica si se ha alcanzado la condición para considerar que se ha resuelto 
-# la tarea (recompensa promediada mayor a 195). Si se cumple la condición, 
-# se imprime un mensaje y se rompe el bucle de entrenamiento.
-
-# En resumen, este código implementa el algoritmo Actor-Critic para entrenar 
-# un modelo que resuelva el entorno "CartPole-v0" utilizando TensorFlow y Keras.
